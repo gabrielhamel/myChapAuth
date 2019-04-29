@@ -52,6 +52,7 @@ void close_socket(cli_t *socket)
 ssize_t sockwrite(cli_t *sock, void *buf, size_t n)
 {
     socklen_t len = sizeof(struct sockaddr_in);
+    struct 
 
     return (sendto(sock->fd, buf, n, 0, (struct sockaddr *)
     &sock->addr, len));
