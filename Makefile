@@ -10,7 +10,9 @@ NAME =		client
 CFLAGS +=	-I$(INC_DIR) -W -Wall -Wextra
 
 SRC =		$(SRC_DIR)/main.c \
-			$(SRC_DIR)/client.c
+			$(SRC_DIR)/client.c \
+			$(SRC_DIR)/send.c \
+			$(SRC_DIR)/usage.c
 
 SRC_DIR =	$(realpath src)
 
