@@ -47,7 +47,6 @@ static bool check_server_port(const char *port)
     return (true);
 }
 
-
 in_addr_t extract_ip(char *ip)
 {
     struct hostent *he;

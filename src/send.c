@@ -46,8 +46,14 @@ char *socket_read(cli_t *cli)
 {
     uint8_t packet[ETH_DATA_LEN] = {0};
     socklen_t size = sizeof(struct sockaddr_in);
-    size_t res = recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
-    (struct sockaddr *)&cli->daddr, &size);
 
-    return (packet);
+    recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
+    (struct sockaddr *)&(cli->daddr), &size);
+
+
+
+
+    #include <stdio.h>
+    printf("%s\n", (char *)packet);
+    return (NULL);
 }

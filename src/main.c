@@ -10,32 +10,16 @@
 #include <stdbool.h>
 #include "mychap.h"
 
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-
-static bool check_sudo(void)
-{
-    int id = getuid();
-
-    if (id != 0) {
-        printf("Error: you doesn't run with root user\n");
-        return (false);
-    }
-    return (true);
-}
-
 int main(int ac, char **av)
 {
-    cli_t *cli;
+    cli_t cli = {0};
 
-    if (check_sudo() == false)
+    if (parsing(&cli, ac, av) == -1)
         return (84);
-    cli = create_cli(av[1], av[2]);
-    if (cli == NULL)
+    if (create_cli(&cli) == -1)
         return (84);
-    socket_write(cli, "client hello", 12);
-    printf("%s\n", socket_read(cli));
-    destroy_cli(cli);
+    socket_write(&cli, "client hello", 12);
+    socket_read(&cli);
+    destroy_cli(&cli);
     return (EXIT_SUCCESS);
 }

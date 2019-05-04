@@ -54,28 +54,22 @@ static int init_socket_serv(cli_t *cli)
     return (0);
 }
 
-cli_t *create_cli(char *ip, char *port)
+int create_cli(cli_t *cli)
 {
-    cli_t *cli = NULL;
-    in_addr_t nip = extract_ip(ip);
-    in_port_t nport = extract_port(port);
+    in_addr_t nip = extract_ip(cli->ip);
+    in_port_t nport = extract_port(cli->port);
 
     if (nip == 0 || nport == 0)
-        return (NULL);
-    cli = malloc(sizeof(cli_t));
-    if (cli == NULL)
-        return (NULL);
-    memset(cli, 0, sizeof(cli_t));
+        return (-1);
     if (init_socket_cli(cli, nip, nport) == -1 ||
     init_socket_serv(cli) == -1) {
         destroy_cli(cli);
-        return (NULL);
+        return (-1);
     }
-    return (cli);
+    return (0);
 }
 
 void destroy_cli(cli_t *cli)
 {
     close(cli->ext);
-    free(cli);
 }
