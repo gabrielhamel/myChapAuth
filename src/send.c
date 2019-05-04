@@ -58,5 +58,5 @@ ssize_t socket_read(cli_t *cli, void *buf, size_t count)
         memcpy(buf, packet + sizeof(struct iphdr) +
         sizeof(struct udphdr), count);
     cli->daddr.sin_port = port;
-    return (res);
+    return (res - sizeof(struct iphdr) - sizeof(struct udphdr));
 }
