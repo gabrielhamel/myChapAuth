@@ -7,13 +7,14 @@
 
 NAME =		client
 
-CFLAGS +=	-I$(INC_DIR) -W -Wall -Wextra
+CFLAGS +=	-I$(INC_DIR) -W -Wall -Wextra -lcrypto
 
 SRC =		$(SRC_DIR)/main.c \
 			$(SRC_DIR)/client.c \
 			$(SRC_DIR)/send.c \
 			$(SRC_DIR)/usage.c \
-			$(SRC_DIR)/parsing.c
+			$(SRC_DIR)/parsing.c \
+			$(SRC_DIR)/strings.c
 
 SRC_DIR =	$(realpath src)
 

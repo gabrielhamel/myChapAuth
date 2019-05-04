@@ -42,18 +42,18 @@ ssize_t socket_write(cli_t *cli, void *buf, size_t count)
     &(cli->daddr), sizeof(struct sockaddr_in)));
 }
 
-char *socket_read(cli_t *cli)
+ssize_t socket_read(cli_t *cli, void *buf, size_t count)
 {
     uint8_t packet[ETH_DATA_LEN] = {0};
     socklen_t size = sizeof(struct sockaddr_in);
+    ssize_t res;
 
     recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
     (struct sockaddr *)&(cli->daddr), &size);
-
-
-
-
-    #include <stdio.h>
-    printf("%s\n", (char *)packet);
-    return (NULL);
+    res = recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
+    (struct sockaddr *)&(cli->daddr), &size);
+    if (res > 0)
+        memcpy(buf, packet + sizeof(struct iphdr) +
+        sizeof(struct udphdr), count);
+    return (res);
 }

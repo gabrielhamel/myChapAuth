@@ -1,3 +1,4 @@
 client
 .vscode
 *.o
+mychap_server

@@ -18,7 +18,7 @@ static int create_socket(void)
 {
     int fd = -1;
 
-    if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) == -1)
+    if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP)) == -1)
         return (-1);
     return (fd);
 }
@@ -50,7 +50,6 @@ static int init_socket_serv(cli_t *cli)
     if (bind(cli->ext, (struct sockaddr *)&cli->saddr,
     sizeof(struct sockaddr_in)) == -1)
         return (-1);
-    cli->saddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     return (0);
 }
 

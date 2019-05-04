@@ -54,13 +54,13 @@ in_addr_t extract_ip(char *ip)
 
     he = gethostbyname(ip);
     if (he == NULL) {
-        dprintf(STDERR_FILENO, "Invalid ip\n");
+        printf("No such hostname: '%s'\n", ip);
         return (0);
     }
     addr_list = (struct in_addr **)he->h_addr_list;
     for (size_t i = 0; addr_list[i] != NULL; i++)
         return (inet_addr(inet_ntoa(*addr_list[i])));
-    dprintf(STDERR_FILENO, "Invalid ip\n");
+    printf("No such hostname: '%s'\n", ip);
     return (0);
 }
 
