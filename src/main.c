@@ -30,6 +30,7 @@ void authentificate(cli_t *cli)
 {
     char msg[BUFSIZ] = {0};
     char newmsg[BUFSIZ] = {0};
+    ssize_t res;
 
     socket_write(cli, "client hello", 12);
     socket_read(cli, msg, BUFSIZ);
@@ -37,6 +38,15 @@ void authentificate(cli_t *cli)
     memcpy(newmsg + 10, cli->password, strlen(cli->password));
     sha256(newmsg, msg, cli->password);
     socket_write(cli, msg, 64);
+    res = socket_read(cli, msg, BUFSIZ);
+    if (!strncmp(msg, "KO", 2)) {
+        printf("KO\n");
+        return;
+    }
+    printf("Secret: '");
+    for (ssize_t i = 0; i < res; i++)
+        printf("%c", msg[i]);
+    printf("'\n");
 }
 
 int main(int ac, char **av)

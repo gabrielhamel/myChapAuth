@@ -47,13 +47,16 @@ ssize_t socket_read(cli_t *cli, void *buf, size_t count)
     uint8_t packet[ETH_DATA_LEN] = {0};
     socklen_t size = sizeof(struct sockaddr_in);
     ssize_t res;
+    in_port_t port = cli->daddr.sin_port;
 
     recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
     (struct sockaddr *)&(cli->daddr), &size);
+    cli->daddr.sin_port = port;
     res = recvfrom(cli->ext, packet, ETH_DATA_LEN, 0,
     (struct sockaddr *)&(cli->daddr), &size);
     if (res > 0)
         memcpy(buf, packet + sizeof(struct iphdr) +
         sizeof(struct udphdr), count);
+    cli->daddr.sin_port = port;
     return (res);
 }
