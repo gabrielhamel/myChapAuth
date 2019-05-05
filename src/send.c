@@ -43,8 +43,9 @@ ssize_t socket_write(cli_t *cli, void *buf, size_t count)
     size = make_ip_hdr(cli, (void *)packet, size);
     res = sendto(cli->ext, packet, size, 0, (struct sockaddr *)
     &(cli->daddr), sizeof(struct sockaddr_in));
-    recvfrom(cli->ext, packet, res, 0,
-    (struct sockaddr *)&(cli->daddr), &len);
+    if (cli->daddr.sin_addr.s_addr == inet_addr("127.0.0.1"))
+        recvfrom(cli->ext, packet, res, 0,
+        (struct sockaddr *)&(cli->daddr), &len);
     cli->daddr.sin_port = port;
     return (res);
 }
