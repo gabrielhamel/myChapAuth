@@ -26,27 +26,45 @@ static void sha256(char *to_encrypt, char *buffer, char *password)
     buffer[64] = '\0';
 }
 
-void authentificate(cli_t *cli)
+static bool is_valid(char *msg)
+{
+    if (!strncmp(msg, "Session Timeout", 15) ||
+    !strncmp(msg, "Protocol Mismatch", 17))
+        return (false);
+    return (true);
+}
+
+static int show_secret(char *msg, ssize_t res)
+{
+    if (is_valid(msg) == false)
+        return (-1);
+    if (!strncmp(msg, "KO", 2)) {
+        printf("KO\n");
+        return (0);
+    }
+    printf("Secret: '");
+    for (ssize_t i = 0; i < res; i++)
+        printf("%c", msg[i]);
+    printf("'\n");
+    return (0);
+}
+
+int authentificate(cli_t *cli)
 {
     char msg[BUFSIZ] = {0};
     char newmsg[BUFSIZ] = {0};
     ssize_t res;
 
     socket_write(cli, "client hello", 12);
-    socket_read(cli, msg, BUFSIZ);
+    res = socket_read(cli, msg, BUFSIZ);
+    if (is_valid(msg) == false || res != 10)
+        return (-1);
     memcpy(newmsg, msg, 10);
     memcpy(newmsg + 10, cli->password, strlen(cli->password));
     sha256(newmsg, msg, cli->password);
     socket_write(cli, msg, 64);
     res = socket_read(cli, msg, BUFSIZ);
-    if (!strncmp(msg, "KO", 2)) {
-        printf("KO\n");
-        return;
-    }
-    printf("Secret: '");
-    for (ssize_t i = 0; i < res; i++)
-        printf("%c", msg[i]);
-    printf("'\n");
+    return (show_secret(msg, res));
 }
 
 int main(int ac, char **av)
@@ -57,7 +75,7 @@ int main(int ac, char **av)
         return (84);
     if (create_cli(&cli) == -1)
         return (84);
-    authentificate(&cli);
+    while (authentificate(&cli));
     destroy_cli(&cli);
     return (EXIT_SUCCESS);
 }
