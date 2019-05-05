@@ -25,14 +25,14 @@ static int create_socket(void)
 
 static int init_socket_cli(cli_t *cli, in_addr_t ip, in_port_t port)
 {
-    socklen_t int_size = sizeof(int);
     int no = 1;
 
     cli->daddr.sin_family = AF_INET;
     cli->daddr.sin_port = port;
     cli->daddr.sin_addr.s_addr = ip;
-    if ((cli->ext = create_socket()) == -1 || setsockopt(cli->ext,
-    IPPROTO_IP, IP_HDRINCL, &no, int_size) == -1)
+    if ((cli->ext = create_socket()) == -1)
+        return (-1);
+    if (setsockopt(cli->ext, IPPROTO_IP, IP_HDRINCL, &no, sizeof(int)) == -1)
         return (-1);
     return (0);
 }
