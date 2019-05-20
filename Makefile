@@ -1,6 +1,6 @@
 ##
 ## EPITECH PROJECT, 2019
-## PSU_strace_2018
+## PSU_chap_2018
 ## File description:
 ## Makefile
 ##
